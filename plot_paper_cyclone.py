@@ -262,138 +262,138 @@ plot DJF zonal-mean cyclone case
 
 """
 
-zm = True
-mean_pl,mean_sfc,lat,lon = pw.fetch_mean_state(config['path_mean'],zm=zm)
+# zm = True
+# mean_pl,mean_sfc,lat,lon = pw.fetch_mean_state(config['path_mean'],zm=zm)
 
-# 500Z plot
-font = {'family':'DejaVu Sans','weight':'bold','size': 12}
-matplotlib.rc('font', **font)
+# # 500Z plot
+# font = {'family':'DejaVu Sans','weight':'bold','size': 12}
+# matplotlib.rc('font', **font)
 
-#plot_vec = False
-plot_vec = True
+# #plot_vec = False
+# plot_vec = True
 
-projection = ccrs.Robinson(central_longitude=-90.)
-fig, ax = plt.subplots(nrows=4,ncols=1,figsize=(11*2,8.5*2),subplot_kw={'projection': projection}, layout='constrained')
+# projection = ccrs.Robinson(central_longitude=-90.)
+# fig, ax = plt.subplots(nrows=4,ncols=1,figsize=(11*2,8.5*2),subplot_kw={'projection': projection}, layout='constrained')
 
-panel_label = ['(A)','(B)','(C)','(D)']
+# panel_label = ['(A)','(B)','(C)','(D)']
 
-axi = -1
-for it in [0,96,168,240]:
-    axi+=1
+# axi = -1
+# for it in [0,96,168,240]:
+#     axi+=1
 
-    infile = opath+'cyclone_DJF_zm_'+str(it)+'h.h5'
-    print('reading from: ',infile)
-    h5f = h5py.File(infile,'r')
-    ivp_pl_save = h5f['ivp_pl_save'][:]
-    h5f.close()
+#     infile = opath+'cyclone_DJF_zm_'+str(it)+'h.h5'
+#     print('reading from: ',infile)
+#     h5f = h5py.File(infile,'r')
+#     ivp_pl_save = h5f['ivp_pl_save'][:]
+#     h5f.close()
 
-    pzdat = (ivp_pl_save[0,5,:,:]- mean_pl[0,5,:,:])/grav
-    udat = (ivp_pl_save[3,5,:,:]- mean_pl[3,5,:,:])
-    vdat = (ivp_pl_save[4,5,:,:]- mean_pl[4,5,:,:])
-    basefield = ivp_pl_save[0,5,:,:]/grav
+#     pzdat = (ivp_pl_save[0,5,:,:]- mean_pl[0,5,:,:])/grav
+#     udat = (ivp_pl_save[3,5,:,:]- mean_pl[3,5,:,:])
+#     vdat = (ivp_pl_save[4,5,:,:]- mean_pl[4,5,:,:])
+#     basefield = ivp_pl_save[0,5,:,:]/grav
 
-    dcint = 15; ncint=10
-    vscale = 250 # vector scaling (counterintuitive:smaller=larger arrows)
+#     dcint = 15; ncint=10
+#     vscale = 250 # vector scaling (counterintuitive:smaller=larger arrows)
 
-    if plot_vec:
-        # Plot vectors on the map
-        latskip = 15
-        lonskip = 15
-        alpha = 1.0
-        col = 'g'
-        cs = ax[axi].quiver(lon[::lonskip],lat[::latskip],udat[::latskip,::lonskip],vdat[::latskip,::lonskip],transform=ccrs.PlateCarree(),scale=vscale,color=col,alpha=alpha)
-        qk = ax[axi].quiverkey(cs, 0.7, 0.01, 10., r'$10~ m/s$', labelpos='E',coordinates='figure',color=col)
+#     if plot_vec:
+#         # Plot vectors on the map
+#         latskip = 15
+#         lonskip = 15
+#         alpha = 1.0
+#         col = 'g'
+#         cs = ax[axi].quiver(lon[::lonskip],lat[::latskip],udat[::latskip,::lonskip],vdat[::latskip,::lonskip],transform=ccrs.PlateCarree(),scale=vscale,color=col,alpha=alpha)
+#         qk = ax[axi].quiverkey(cs, 0.7, 0.01, 10., r'$10~ m/s$', labelpos='E',coordinates='figure',color=col)
 
-    # mean state or full field
-    alpha = 1.0
-    cints = np.arange(4800,6000,60.)
-    cs = ax[axi].contour(lon,lat,basefield,levels=cints,colors='0.5',transform=ccrs.PlateCarree(),alpha=alpha)
-    # perturbations
-    alpha = 1.0
-    cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
-    cints_neg = list(np.arange(-ncint*dcint,-dcint+.001,dcint))
-    cints_pos = list(np.arange(dcint,ncint*dcint+.001,dcint))
-    lw = 2.
-    cs = ax[axi].contour(lon,lat,pzdat,levels=cints_neg,colors='b',linestyles='solid',linewidths=lw,transform=ccrs.PlateCarree(),alpha=alpha)
-    cs = ax[axi].contour(lon,lat,pzdat,levels=cints_pos,colors='r',linestyles='solid',linewidths=lw,transform=ccrs.PlateCarree(),alpha=alpha)
+#     # mean state or full field
+#     alpha = 1.0
+#     cints = np.arange(4800,6000,60.)
+#     cs = ax[axi].contour(lon,lat,basefield,levels=cints,colors='0.5',transform=ccrs.PlateCarree(),alpha=alpha)
+#     # perturbations
+#     alpha = 1.0
+#     cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
+#     cints_neg = list(np.arange(-ncint*dcint,-dcint+.001,dcint))
+#     cints_pos = list(np.arange(dcint,ncint*dcint+.001,dcint))
+#     lw = 2.
+#     cs = ax[axi].contour(lon,lat,pzdat,levels=cints_neg,colors='b',linestyles='solid',linewidths=lw,transform=ccrs.PlateCarree(),alpha=alpha)
+#     cs = ax[axi].contour(lon,lat,pzdat,levels=cints_pos,colors='r',linestyles='solid',linewidths=lw,transform=ccrs.PlateCarree(),alpha=alpha)
 
-    # colorize land
-    ax[axi].add_feature(cfeature.LAND,edgecolor='0.5',linewidth=0.5,zorder=-1)
+#     # colorize land
+#     ax[axi].add_feature(cfeature.LAND,edgecolor='0.5',linewidth=0.5,zorder=-1)
 
-    # gridlines
-    gl = ax[axi].gridlines(crs=ccrs.PlateCarree(),linewidth=1.0,color='gray', alpha=0.5,linestyle='--', draw_labels=True)
+#     # gridlines
+#     gl = ax[axi].gridlines(crs=ccrs.PlateCarree(),linewidth=1.0,color='gray', alpha=0.5,linestyle='--', draw_labels=True)
 
-    ax[axi].set_extent([140, 360, 10, 70],crs=ccrs.PlateCarree()) # Pacific
+#     ax[axi].set_extent([140, 360, 10, 70],crs=ccrs.PlateCarree()) # Pacific
 
-    ax[axi].text(130,10,panel_label[axi],transform=ccrs.PlateCarree())
+#     ax[axi].text(130,10,panel_label[axi],transform=ccrs.PlateCarree())
 
-if savefig:
-    fig.tight_layout()
-    plt.savefig('IVP_500_zm.pdf',dpi=300,bbox_inches='tight')
+# if savefig:
+#     fig.tight_layout()
+#     plt.savefig('IVP_500_zm.pdf',dpi=300,bbox_inches='tight')
 
-# surface plots
-font = {'family':'DejaVu Sans','weight':'bold','size': 12}
-matplotlib.rc('font', **font)
+# # surface plots
+# font = {'family':'DejaVu Sans','weight':'bold','size': 12}
+# matplotlib.rc('font', **font)
 
-#plot_vec = False
-plot_vec = True
+# #plot_vec = False
+# plot_vec = True
 
-projection = ccrs.Robinson(central_longitude=-90.)
-fig, ax = plt.subplots(nrows=4,ncols=1,figsize=(11*2,8.5*2),subplot_kw={'projection': projection}, layout='constrained')
+# projection = ccrs.Robinson(central_longitude=-90.)
+# fig, ax = plt.subplots(nrows=4,ncols=1,figsize=(11*2,8.5*2),subplot_kw={'projection': projection}, layout='constrained')
 
-panel_label = ['(A)','(B)','(C)','(D)']
+# panel_label = ['(A)','(B)','(C)','(D)']
 
-axi = -1
-for it in [0,96,168,240]:
-    axi+=1
+# axi = -1
+# for it in [0,96,168,240]:
+#     axi+=1
 
-    infile = opath+'cyclone_DJF_zm_'+str(it)+'h.h5'
-    print('reading from: ',infile)
-    h5f = h5py.File(infile,'r')
-    ivp_sfc_save = h5f['ivp_sfc_save'][:]
-    udat = ivp_sfc_save[1,:,:]- mean_sfc[1,:,:]
-    vdat = ivp_sfc_save[2,:,:]- mean_sfc[2,:,:]
-    tdat = ivp_sfc_save[3,:,:]- mean_sfc[3,:,:]
-    zdat = (ivp_sfc_save[0,:,:]- mean_sfc[0,:,:])/100.
-    h5f.close()
+#     infile = opath+'cyclone_DJF_zm_'+str(it)+'h.h5'
+#     print('reading from: ',infile)
+#     h5f = h5py.File(infile,'r')
+#     ivp_sfc_save = h5f['ivp_sfc_save'][:]
+#     udat = ivp_sfc_save[1,:,:]- mean_sfc[1,:,:]
+#     vdat = ivp_sfc_save[2,:,:]- mean_sfc[2,:,:]
+#     tdat = ivp_sfc_save[3,:,:]- mean_sfc[3,:,:]
+#     zdat = (ivp_sfc_save[0,:,:]- mean_sfc[0,:,:])/100.
+#     h5f.close()
 
-    if plot_vec:
-        # Plot vectors on the map
-        latskip = 15
-        lonskip = 15
-        vscale = 250 # vector scaling (counterintuitive:smaller=larger arrows)
-        alpha = 1.0
-        col = 'g'
-        cs =ax[axi].quiver(lon[::lonskip],lat[::latskip],udat[::latskip,::lonskip],vdat[::latskip,::lonskip],transform=ccrs.PlateCarree(),scale=vscale,color=col,alpha=alpha)
-        qk = ax[axi].quiverkey(cs, 0.7, 0.01, 5., r'$5~ m/s$', labelpos='E',coordinates='figure',color=col)
+#     if plot_vec:
+#         # Plot vectors on the map
+#         latskip = 15
+#         lonskip = 15
+#         vscale = 250 # vector scaling (counterintuitive:smaller=larger arrows)
+#         alpha = 1.0
+#         col = 'g'
+#         cs =ax[axi].quiver(lon[::lonskip],lat[::latskip],udat[::latskip,::lonskip],vdat[::latskip,::lonskip],transform=ccrs.PlateCarree(),scale=vscale,color=col,alpha=alpha)
+#         qk = ax[axi].quiverkey(cs, 0.7, 0.01, 5., r'$5~ m/s$', labelpos='E',coordinates='figure',color=col)
 
-    # add MSLP
-    alpha = 1.0
-    dcint = 2; ncint=10
-    cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
-    cs = ax[axi].contour(lon,lat,zdat,levels=cints,colors='k',linewidths=2.0,transform=ccrs.PlateCarree(),alpha=alpha)
+#     # add MSLP
+#     alpha = 1.0
+#     dcint = 2; ncint=10
+#     cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
+#     cs = ax[axi].contour(lon,lat,zdat,levels=cints,colors='k',linewidths=2.0,transform=ccrs.PlateCarree(),alpha=alpha)
 
-    # add T_2m
-    alpha = 1.0 
-    if it>3:
-        dcint = 2.0; ncint = 10
-    else:
-        dcint = 1.0; ncint = 10
-    cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
-    cints_neg = list(np.arange(-ncint*dcint,-dcint+.001,dcint))
-    cints_pos = list(np.arange(dcint,ncint*dcint+.001,dcint))
-    csc = ax[axi].contour(lon,lat,tdat,levels=cints_neg,colors='b',linestyles='solid',transform=ccrs.PlateCarree(),alpha=alpha,zorder=0)
-    csc = ax[axi].contour(lon,lat,tdat,levels=cints_pos,colors='r',transform=ccrs.PlateCarree(),alpha=alpha,zorder=-1)
+#     # add T_2m
+#     alpha = 1.0 
+#     if it>3:
+#         dcint = 2.0; ncint = 10
+#     else:
+#         dcint = 1.0; ncint = 10
+#     cints = list(np.arange(-ncint*dcint,-dcint+.001,dcint))+list(np.arange(dcint,ncint*dcint+.001,dcint))
+#     cints_neg = list(np.arange(-ncint*dcint,-dcint+.001,dcint))
+#     cints_pos = list(np.arange(dcint,ncint*dcint+.001,dcint))
+#     csc = ax[axi].contour(lon,lat,tdat,levels=cints_neg,colors='b',linestyles='solid',transform=ccrs.PlateCarree(),alpha=alpha,zorder=0)
+#     csc = ax[axi].contour(lon,lat,tdat,levels=cints_pos,colors='r',transform=ccrs.PlateCarree(),alpha=alpha,zorder=-1)
 
-    # colorize land
-    ax[axi].add_feature(cfeature.LAND,edgecolor='0.5',linewidth=0.5,zorder=-1)
+#     # colorize land
+#     ax[axi].add_feature(cfeature.LAND,edgecolor='0.5',linewidth=0.5,zorder=-1)
 
-    # add gridlines
-    gl = ax[axi].gridlines(crs=ccrs.PlateCarree(), linewidth=1, color='gray', alpha=0.5, linestyle='--', draw_labels=True)
-    ax[axi].set_extent([140, 360, 10, 70],crs=ccrs.PlateCarree()) # Pacific
+#     # add gridlines
+#     gl = ax[axi].gridlines(crs=ccrs.PlateCarree(), linewidth=1, color='gray', alpha=0.5, linestyle='--', draw_labels=True)
+#     ax[axi].set_extent([140, 360, 10, 70],crs=ccrs.PlateCarree()) # Pacific
 
-    ax[axi].text(130,10,panel_label[axi],transform=ccrs.PlateCarree())
+#     ax[axi].text(130,10,panel_label[axi],transform=ccrs.PlateCarree())
 
-if savefig:
-    fig.tight_layout()
-    plt.savefig('IVP_SFC_zm.pdf',dpi=300,bbox_inches='tight')
+# if savefig:
+#     fig.tight_layout()
+#     plt.savefig('IVP_SFC_zm.pdf',dpi=300,bbox_inches='tight')

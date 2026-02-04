@@ -1,0 +1,28 @@
+# sets paths to code, model weights, mean-state, inputs and outputs
+path_model: '/N/slate/jmelms/projects/.E2S_cache/pangu/' # using E2S weights, not those downloaded from the HM24 link
+path_mean: '/N/slate/jmelms/projects/.E2S_cache/pangu_hm24/'
+path_input: '/N/slate/jmelms/projects/.E2S_cache/pangu_hm24/'
+path_output: '/N/scratch/jmelms/hm24/cyclone/'
+
+# choose mean state season ('DJF' or 'JJA')
+mean_state_season: 'DJF'
+
+# flag for zonal-mean simulations
+zm: False
+#zm: True
+
+# simulation length in hours
+nhours: 96
+#nhours: 240
+
+# state output frequency in hours (determines the model(s) used))
+ohr: 24
+#ohr: 120
+
+# only write 500hPa fields (False = write all)
+only_500: False
+
+# pangu specific info (don't change)
+var_sfc: ["msl", "u10m", "v10m", "t2m"]
+var_pl: ["z", "q", "t", "u", "v"]
+levels: [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]
